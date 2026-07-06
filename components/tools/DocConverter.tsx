@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { UploadSimple, DownloadSimple, ArrowCounterClockwise, WarningCircle, FileText, Copy, ArrowsLeftRight, ClipboardText } from "@phosphor-icons/react";
+import { UploadSimple, DownloadSimple, ArrowCounterClockwise, WarningCircle, FileText, ClipboardText, ArrowsLeftRight } from "@phosphor-icons/react";
 import { marked } from "marked";
 import mammoth from "mammoth";
 import TurndownService from "turndown";
@@ -62,23 +62,121 @@ export function DocConverter() {
     setError(null);
     setResultText(null);
     setResultBlob(null);
-    setProgress(20);
+    setProgress(10);
+    setProgressStage("Đang chuẩn bị tệp tin...");
+
+    // Determine target format
+    let targetFormat = "";
+    if (activeTab === "md2word") {
+      targetFormat = "docx";
+    } else if (activeTab === "word2md") {
+      targetFormat = "md";
+    } else if (activeTab === "pdf2text") {
+      targetFormat = "txt";
+    }
 
     try {
-      if (activeTab === "md2word") {
-        if (!markdownInput.trim()) {
-          throw new Error("Vui lòng nhập nội dung Markdown để chuyển đổi.");
-        }
-        setProgressStage("Đang phân tích cú pháp Markdown...");
-        setProgress(50);
+      // 1. Try CloudConvert API first (unless we are doing client-only MD editor mode where no file is uploaded yet, wait, we can convert MD text to a file!)
+      let fileToUpload = selectedFile;
+      if (activeTab === "md2word" && !fileToUpload) {
+        // Create a temporary File object from the markdown textarea input
+        fileToUpload = new File([markdownInput], "document.md", { type: "text/markdown" });
+      }
 
-        // Convert MD to HTML
+      if (fileToUpload) {
+        setProgress(20);
+        setProgressStage("Khởi tạo phiên kết nối CloudConvert...");
+        
+        const initResponse = await fetch("/api/convert/create-job", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ targetFormat }),
+        });
+
+        const initResult = await initResponse.json();
+        
+        // If CloudConvert is configured and created successfully
+        if (initResponse.ok && initResult.success) {
+          const { uploadForm, exportTaskId } = initResult;
+          
+          setProgress(40);
+          setProgressStage("Đang tải tệp tin lên máy chủ CloudConvert...");
+          
+          // Construct direct upload body
+          const uploadData = new FormData();
+          Object.entries(uploadForm.parameters).forEach(([key, val]) => {
+            uploadData.append(key, val as string);
+          });
+          uploadData.append("file", fileToUpload);
+          
+          const uploadResponse = await fetch(uploadForm.url, {
+            method: "POST",
+            body: uploadData,
+          });
+
+          if (!uploadResponse.ok) {
+            throw new Error("Lỗi tải tệp tin lên CloudConvert.");
+          }
+
+          setProgress(60);
+          setProgressStage("Đang chuyển đổi định dạng tệp tin (CloudConvert)...");
+
+          // Poll check-status API route in a loop
+          let statusResult;
+          let attempts = 0;
+          const maxAttempts = 30; // Max 45 seconds
+          
+          while (attempts < maxAttempts) {
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+            attempts++;
+            
+            const statusResponse = await fetch(`/api/convert/check-status?taskId=${exportTaskId}`);
+            statusResult = await statusResponse.json();
+
+            if (!statusResponse.ok || !statusResult.success) {
+              throw new Error(statusResult.error || "Không thể kiểm tra trạng thái chuyển đổi.");
+            }
+
+            if (statusResult.status === "finished") {
+              setProgress(100);
+              setProgressStage("Đang nhận file kết quả...");
+              const fileUrl = statusResult.url;
+              
+              if (activeTab === "md2word") {
+                const response = await fetch(fileUrl);
+                const fileBlob = await response.blob();
+                setResultBlob(fileBlob);
+              } else {
+                // Word to MD or PDF to Text: fetch text content
+                const response = await fetch(fileUrl);
+                const textContent = await response.text();
+                setResultText(textContent);
+              }
+              return; // Success!
+            }
+
+            if (statusResult.status === "error") {
+              throw new Error(statusResult.error || "Chuyển đổi thất bại.");
+            }
+
+            // Slowly increment progress during processing
+            setProgress((prev) => Math.min(prev + 1, 90));
+          }
+          
+          throw new Error("Thời gian chờ chuyển đổi vượt quá giới hạn.");
+        } else {
+          // Log warnings if API is not configured or fails
+          console.warn("CloudConvert API is not configured or failed. Falling back to local offline processing:", initResult.error);
+        }
+      }
+
+      // 2. Local fallback offline processing (runs 100% client-side)
+      setProgressStage("Đang chạy bộ xử lý cục bộ offline (WASM/Canvas)...");
+      setProgress(50);
+
+      if (activeTab === "md2word") {
         const htmlContent = await marked.parse(markdownInput);
         
-        setProgress(80);
-        setProgressStage("Đang đóng gói file Word (DOCX)...");
-
-        // Format Word Document Content
         const header = `
           <html xmlns:o='urn:schemas-microsoft-com:office:office' 
                 xmlns:w='urn:schemas-microsoft-com:office:word' 
@@ -86,15 +184,6 @@ export function DocConverter() {
           <head>
             <meta charset="utf-8">
             <title>Tài liệu chuyển đổi</title>
-            <!--[if gte mso 9]>
-            <xml>
-              <w:WordDocument>
-                <w:View>Print</w:View>
-                <w:Zoom>100</w:Zoom>
-                <w:DoNotOptimizeForBrowser/>
-              </w:WordDocument>
-            </xml>
-            <![endif]-->
             <style>
               body { font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.5; color: #333333; }
               h1 { font-size: 20pt; font-weight: bold; color: #ff5e3a; margin-top: 18pt; margin-bottom: 8pt; border-bottom: 1px solid #eeeeee; padding-bottom: 4pt; }
@@ -123,32 +212,19 @@ export function DocConverter() {
         setProgress(100);
       } 
       else if (activeTab === "word2md" && selectedFile) {
-        setProgressStage("Đang đọc nhị phân tệp Word...");
-        setProgress(30);
-
         const arrayBuffer = await selectedFile.arrayBuffer();
-        
-        setProgress(60);
-        setProgressStage("Đang phân tích cấu trúc tài liệu...");
         const result = await mammoth.convertToHtml({ arrayBuffer });
-        const html = result.value;
-
-        setProgress(85);
-        setProgressStage("Đang sinh mã nguồn Markdown...");
-        
         const turndownService = new TurndownService({
           headingStyle: "atx",
           codeBlockStyle: "fenced"
         });
         
-        const markdown = turndownService.turndown(html);
+        const markdown = turndownService.turndown(result.value);
         setResultText(markdown);
         setProgress(100);
       } 
       else if (activeTab === "pdf2text" && selectedFile) {
-        setProgressStage("Đang nạp công cụ đọc PDF...");
         const arrayBuffer = await selectedFile.arrayBuffer();
-        
         const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
         
         loadingTask.onProgress = (progressData: any) => {
@@ -195,7 +271,8 @@ export function DocConverter() {
 
     if (activeTab === "md2word" && resultBlob) {
       blob = resultBlob;
-      filename = "document_converted.doc"; // Export as .doc which Word handles perfectly
+      // If CloudConvert is used, the returned file is a native .docx, otherwise it is a MSWord compatible .doc
+      filename = resultBlob.type.includes("word") ? "document_converted.docx" : "document_converted.doc";
     } else if (resultText) {
       blob = new Blob([resultText], { type: "text/plain;charset=utf-8" });
       filename = activeTab === "word2md" ? "document_converted.md" : "pdf_text_extracted.txt";
@@ -369,7 +446,7 @@ export function DocConverter() {
             >
               <DownloadSimple size={18} weight="bold" />
               <span>
-                {activeTab === "md2word" ? "Tải xuống file Word (.doc)" : activeTab === "word2md" ? "Tải xuống file Markdown (.md)" : "Tải xuống file Văn bản (.txt)"}
+                {activeTab === "md2word" ? "Tải xuống file Word" : activeTab === "word2md" ? "Tải xuống file Markdown (.md)" : "Tải xuống file Văn bản (.txt)"}
               </span>
             </button>
           )}
