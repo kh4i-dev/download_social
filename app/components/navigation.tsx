@@ -21,6 +21,7 @@ export function Navigation() {
     { name: "Cắt video", href: "/tools/cat-video", icon: Scissors },
     { name: "Đổi định dạng", href: "/tools/doi-dinh-dang", icon: FileText },
     { name: "Tạo phụ đề", href: "/tools/tao-phu-de", icon: FileText },
+    { name: "Chuyển đổi tài liệu", href: "/tools/chuyen-doi-tai-lieu", icon: FileText },
   ];
 
   useEffect(() => {
