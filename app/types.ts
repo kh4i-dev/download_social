@@ -1,6 +1,6 @@
 export interface DownloadRequest {
   url: string;
-  quality: "mp3" | "720" | "1080" | "max";
+  quality: "mp3" | "720" | "1080" | "1440" | "2160" | "4320" | "max";
 }
 
 export interface ApiResponse<T = any> {

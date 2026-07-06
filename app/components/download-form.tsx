@@ -6,7 +6,7 @@ import { ApiResponse } from "../types";
 
 export function DownloadForm() {
   const [url, setUrl] = useState("");
-  const [quality, setQuality] = useState<"mp3" | "720" | "1080" | "max">("1080");
+  const [quality, setQuality] = useState<"mp3" | "720" | "1080" | "1440" | "2160" | "4320" | "max">("1080");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
@@ -114,7 +114,10 @@ export function DownloadForm() {
               <option value="mp3" className="bg-zinc-950 text-zinc-200">Âm thanh MP3 (320kbps)</option>
               <option value="720" className="bg-zinc-950 text-zinc-200">Video HD 720p</option>
               <option value="1080" className="bg-zinc-950 text-zinc-200">Video Full HD 1080p</option>
-              <option value="max" className="bg-zinc-950 text-zinc-200">Chất lượng tối đa sẵn có</option>
+              <option value="1440" className="bg-zinc-950 text-zinc-200">Video 2K QHD 1440p</option>
+              <option value="2160" className="bg-zinc-950 text-zinc-200">Video 4K UHD 2160p</option>
+              <option value="4320" className="bg-zinc-950 text-zinc-200">Video 8K UHD 4320p</option>
+              <option value="max" className="bg-zinc-950 text-zinc-200">Chất lượng tối đa gốc (Max)</option>
             </select>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
