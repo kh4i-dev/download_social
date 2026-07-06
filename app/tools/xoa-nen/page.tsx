@@ -1,13 +1,16 @@
+"use client";
+
 import React from "react";
+import dynamic from "next/dynamic";
 import { Navigation } from "../../components/navigation";
 import { ToolCard } from "../../../components/tools/ToolCard";
-import { BackgroundRemover } from "../../../components/tools/BackgroundRemover";
 import { Footer } from "../../components/footer";
 
-export const metadata = {
-  title: "Xóa nền ảnh - kh4idev Media Tools",
-  description: "Trích tách nền hình ảnh tự động và hoàn toàn trực tuyến trên trình duyệt bằng AI thông minh.",
-};
+// Disable Server-Side Rendering (SSR) for browser-only background removal dependency
+const BackgroundRemover = dynamic(
+  () => import("../../../components/tools/BackgroundRemover").then((mod) => mod.BackgroundRemover),
+  { ssr: false }
+);
 
 export default function BackgroundRemoverPage() {
   return (
@@ -36,7 +39,7 @@ export default function BackgroundRemoverPage() {
         {/* Dynamic Tool Card */}
         <ToolCard
           title="Xóa nền hình ảnh"
-          description="Kéo thả hình ảnh (PNG, JPG, WebP) và nhấn nút tách nền để xóa phông nền bằng mô hình AI cục bộ."
+          description="Kéo thả hình ảnh (PNG, JPG, WebP) và nhấn nút tách nền để xóa phông nền bằng mô hình AI cục bộ hoặc API."
         >
           <BackgroundRemover />
         </ToolCard>
