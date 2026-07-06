@@ -64,14 +64,14 @@ export function DownloadForm() {
   return (
     <div className="w-full space-y-6">
       <div>
-        <h3 className="text-lg font-semibold text-zinc-100">Cổng Truyền Tải</h3>
-        <p className="text-xs text-zinc-500 mt-1">Cấu hình các tùy chọn và lấy liên kết tải xuống.</p>
+        <h3 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">Cổng Truyền Tải</h3>
+        <p className="text-[10px] text-zinc-500 mt-1">Cấu hình các tùy chọn và lấy liên kết tải xuống.</p>
       </div>
 
-      <form onSubmit={handleDownload} className="space-y-6">
+      <form onSubmit={handleDownload} className="space-y-5">
         {/* Input box section */}
         <div className="space-y-2">
-          <label htmlFor="video-url" className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+          <label htmlFor="video-url" className="block text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
             Đường liên kết Video
           </label>
           <div className="relative flex items-center">
@@ -100,7 +100,7 @@ export function DownloadForm() {
 
         {/* Quality select section */}
         <div className="space-y-2">
-          <label htmlFor="quality" className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+          <label htmlFor="quality" className="block text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
             Độ phân giải mục tiêu
           </label>
           <div className="relative">
@@ -127,16 +127,21 @@ export function DownloadForm() {
           </div>
         </div>
 
-        {/* Action Button */}
+        {/* Action Button with Premium Shine Sweep Effect */}
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full py-4 px-6 rounded-xl font-medium flex items-center justify-center gap-2.5 transition-all duration-200 active-press outline-none cursor-pointer ${
+          className={`w-full py-4 px-6 rounded-xl font-medium flex items-center justify-center gap-2.5 transition-all duration-300 active-press outline-none cursor-pointer relative overflow-hidden group/btn ${
             isLoading
               ? "bg-zinc-800/60 text-zinc-500 cursor-not-allowed border border-zinc-800/20"
-              : "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 shadow-[0_4px_20px_rgba(16,185,129,0.15)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.25)]"
+              : "bg-emerald-500 hover:bg-emerald-400 text-zinc-950 shadow-[0_4px_20px_rgba(16,185,129,0.15)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.3)]"
           }`}
         >
+          {/* Animated Shine Layer */}
+          {!isLoading && (
+            <div className="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-120%] group-hover/btn:translate-x-[120%] transition-transform duration-1000 ease-out pointer-events-none" />
+          )}
+
           {isLoading ? (
             <>
               <ArrowCounterClockwise className="animate-spin" size={18} />
@@ -144,7 +149,7 @@ export function DownloadForm() {
             </>
           ) : (
             <>
-              <DownloadSimple size={18} weight="bold" />
+              <DownloadSimple size={18} weight="bold" className="group-hover/btn:scale-110 transition-transform" />
               <span>Tải xuống ngay</span>
             </>
           )}
