@@ -17,8 +17,7 @@ export function DownloadForm() {
     if (!urlStr) return null;
     const cleanUrl = urlStr.trim();
     
-    // Direct ID input support (length 11, no slashes or dots)
-    if (cleanUrl.length === 11 && !cleanUrl.includes("/") && !cleanUrl.includes(".")) {
+    if (cleanUrl.length === 11 && /^[a-zA-Z0-9_-]{11}$/.test(cleanUrl)) {
       return cleanUrl;
     }
 
@@ -26,26 +25,33 @@ export function DownloadForm() {
       const urlObj = new URL(cleanUrl);
       if (urlObj.hostname.includes("youtube.com") || urlObj.hostname.includes("youtu.be")) {
         if (urlObj.hostname.includes("youtu.be")) {
-          // Remove leading slash
-          return urlObj.pathname.substring(1).split(/[?#]/)[0];
+          const id = urlObj.pathname.substring(1).split(/[?#]/)[0].substring(0, 11);
+          if (/^[a-zA-Z0-9_-]{11}$/.test(id)) return id;
         }
         const v = urlObj.searchParams.get("v");
-        if (v) return v;
+        if (v) {
+          const id = v.substring(0, 11);
+          if (/^[a-zA-Z0-9_-]{11}$/.test(id)) return id;
+        }
         if (urlObj.pathname.startsWith("/shorts/")) {
-          return urlObj.pathname.split("/")[2];
+          const id = urlObj.pathname.split("/")[2].substring(0, 11);
+          if (/^[a-zA-Z0-9_-]{11}$/.test(id)) return id;
         }
         if (urlObj.pathname.startsWith("/embed/")) {
-          return urlObj.pathname.split("/")[2];
+          const id = urlObj.pathname.split("/")[2].substring(0, 11);
+          if (/^[a-zA-Z0-9_-]{11}$/.test(id)) return id;
         }
       }
     } catch {
-      // Fallback regex matching standard youtube URLs
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-      const match = cleanUrl.match(regExp);
-      if (match && match[2].length === 11) {
-        return match[2];
-      }
+      // Fallback
     }
+
+    const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = cleanUrl.match(regExp);
+    if (match) {
+      return match[1];
+    }
+
     return null;
   };
 
