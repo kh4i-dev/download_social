@@ -39,13 +39,13 @@ export default function Home() {
         </nav>
       </header>
 
-      {/* Main content grid */}
-      <div className="flex-1 flex flex-col justify-center items-center max-w-2xl mx-auto w-full px-4 pt-32 pb-12 relative z-10">
+      {/* Main content container */}
+      <div className="flex-1 flex flex-col justify-center items-center max-w-4xl mx-auto w-full px-4 pt-32 pb-12 relative z-10">
         
         {/* Hero Section */}
         <div className="text-center space-y-3 mb-8 w-full">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-100 leading-tight font-display">
-            kh4idev <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400">Stream Client</span>
+            kh4idev <span className="text-[#ff5e3a]">Stream</span> Client
           </h1>
           <p className="text-xs md:text-sm text-zinc-400 leading-relaxed max-w-md mx-auto">
             Giải mã và lưu trữ video yêu thích từ YouTube, Facebook, TikTok và Instagram trực tiếp về máy của bạn chỉ trong vài giây.
@@ -53,14 +53,7 @@ export default function Home() {
         </div>
 
         {/* Downloader Card - Centered Focus */}
-        <div className="w-full">
-          <div className="glass-panel rounded-2xl p-6 md:p-8 relative overflow-hidden group/form hover:border-orange-500/10 transition-all duration-500 shadow-[0_30px_100px_rgba(0,0,0,0.6)] hover-scale-effect">
-            {/* Top lighting gradient border */}
-            <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-orange-500/10 to-transparent" />
-            
-            <DownloadForm />
-          </div>
-        </div>
+        <DownloadForm />
 
         {/* Bottom Platform Info */}
         <div className="mt-8 text-center space-y-3">
