@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #09090b;
+  --background: #0d0d12;
   --foreground: #fafafa;
   
-  --emerald-glow: rgba(16, 185, 129, 0.08);
-  --grid-color: rgba(63, 63, 70, 0.15);
+  --orange-glow: rgba(255, 94, 58, 0.06);
+  --grid-color: rgba(99, 102, 241, 0.05); /* Soft electric indigo grid */
 }
 
 @theme inline {
@@ -13,6 +13,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans), sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
+  --font-display: var(--font-outfit), var(--font-geist-sans), sans-serif;
 }
 
 body {
@@ -24,47 +25,77 @@ body {
 
 /* Premium Background Grid Pattern */
 .bg-grid-pattern {
-  background-size: 40px 40px;
+  background-size: 50px 50px;
   background-image: 
     linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
-  mask-image: radial-gradient(circle at 50% 50%, black 60%, transparent 100%);
+  mask-image: radial-gradient(circle at 50% 50%, black 50%, transparent 100%);
 }
 
 /* Asymmetric Glow Effects */
 .glow-orb-1 {
   position: absolute;
-  top: -10%;
-  left: 20%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, var(--emerald-glow) 0%, transparent 70%);
-  filter: blur(80px);
+  top: -15%;
+  left: 15%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, var(--orange-glow) 0%, transparent 70%);
+  filter: blur(100px);
   pointer-events: none;
   z-index: 0;
 }
 
 .glow-orb-2 {
   position: absolute;
-  bottom: 10%;
-  right: 10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.03) 0%, transparent 75%);
-  filter: blur(60px);
+  bottom: 5%;
+  right: 5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.03) 0%, transparent 70%); /* Soft Electric Lavender */
+  filter: blur(80px);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Premium Card Glassmorphism */
+/* Premium Card Glassmorphism - Warm Film Cell Slate */
 .glass-panel {
-  background: rgba(18, 18, 24, 0.6);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(63, 63, 70, 0.3);
+  background: rgba(22, 22, 34, 0.7);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 24px 80px rgba(0, 0, 0, 0.6);
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Film Reel Sprockets Effect (Signature Element) */
+.film-strip-reel {
+  position: relative;
+  background-color: #161622;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.film-sprockets-top, .film-sprockets-bottom {
+  height: 12px;
+  background-color: #0f0f16;
+  background-image: repeating-linear-gradient(
+    to right,
+    #1c1c2b,
+    #1c1c2b 12px,
+    #0f0f16 12px,
+    #0f0f16 28px
+  );
+  width: 100%;
+}
+
+.film-sprockets-top {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.film-sprockets-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 /* Custom transitions and states */
@@ -83,7 +114,7 @@ body {
 }
 
 .shimmer-loader {
-  background: linear-gradient(90deg, rgba(63, 63, 70, 0.2) 25%, rgba(113, 113, 122, 0.3) 50%, rgba(63, 63, 70, 0.2) 75%);
+  background: linear-gradient(90deg, rgba(22, 22, 34, 0.3) 25%, rgba(255, 94, 58, 0.05) 50%, rgba(22, 22, 34, 0.3) 75%);
   background-size: 200% 100%;
-  animation: skeleton-shimmer 1.5s infinite linear;
+  animation: skeleton-shimmer 2s infinite linear;
 }

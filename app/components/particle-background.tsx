@@ -66,7 +66,7 @@ export function ParticleBackground() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(16, 185, 129, 0.25)"; // Emerald color
+        ctx.fillStyle = "rgba(255, 94, 58, 0.25)"; // Sunset Orange color
         ctx.fill();
       });
 
@@ -82,7 +82,7 @@ export function ParticleBackground() {
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(16, 185, 129, ${alpha})`;
+            ctx.strokeStyle = `rgba(255, 94, 58, ${alpha})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }
@@ -100,7 +100,7 @@ export function ParticleBackground() {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(mouse.x!, mouse.y!);
-            ctx.strokeStyle = `rgba(16, 185, 129, ${alpha})`;
+            ctx.strokeStyle = `rgba(255, 94, 58, ${alpha})`;
             ctx.lineWidth = 1.0;
             ctx.stroke();
           }
