@@ -6,11 +6,7 @@ import { Navigation } from "../../components/navigation";
 import { ToolCard } from "../../../components/tools/ToolCard";
 import { Footer } from "../../components/footer";
 
-// Disable Server-Side Rendering (SSR) for browser-only subtitle features
-const SubtitleGenerator = dynamic(
-  () => import("../../../components/tools/SubtitleGenerator").then((mod) => mod.SubtitleGenerator),
-  { ssr: false }
-);
+import { FileText } from "@phosphor-icons/react";
 
 export default function SubtitleGeneratorPage() {
   return (
@@ -32,16 +28,24 @@ export default function SubtitleGeneratorPage() {
             Tạo <span className="text-[#ff5e3a]">Phụ Đề</span> Tự Động
           </h1>
           <p className="text-xs md:text-sm text-zinc-400 leading-relaxed max-w-md mx-auto">
-            Trích xuất phụ đề gốc từ YouTube hoặc chuyển đổi giọng nói thành văn bản srt bằng mô hình AI Whisper siêu tốc.
+            Trích xuất phụ đề gốc hoặc dịch giọng nói thành tệp tin phụ đề thông minh.
           </p>
         </div>
 
         {/* Dynamic Tool Card */}
         <ToolCard
           title="Tạo phụ đề cho video"
-          description="Dán đường dẫn YouTube hoặc nạp file của bạn lên để trích xuất phụ đề, hỗ trợ đồng bộ hóa câu dịch chuẩn xác."
+          description="Tính năng đang được tối ưu hóa hiệu năng."
         >
-          <SubtitleGenerator />
+          <div className="flex flex-col items-center justify-center text-center py-12 px-6 space-y-4">
+            <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-full text-zinc-500">
+              <FileText size={32} />
+            </div>
+            <h3 className="text-sm font-bold text-zinc-200">Công cụ đang phát triển</h3>
+            <p className="text-xs text-zinc-500 max-w-xs leading-relaxed">
+              Tính năng tạo phụ đề tự động bằng mô hình AI Whisper đang được nâng cấp để tích hợp trực tiếp trên hạ tầng lưu trữ đám mây.
+            </p>
+          </div>
         </ToolCard>
 
       </div>

@@ -18,9 +18,9 @@ export function Navigation() {
   const tools = [
     { name: "Tải Video", href: "/", icon: Video },
     { name: "Xoá nền ảnh", href: "/tools/xoa-nen", icon: Image },
-    { name: "Cắt video", href: "/tools/cat-video", icon: Scissors },
-    { name: "Đổi định dạng", href: "/tools/doi-dinh-dang", icon: FileText },
-    { name: "Tạo phụ đề", href: "/tools/tao-phu-de", icon: FileText },
+    { name: "Cắt video", href: "/tools/cat-video", icon: Scissors, comingSoon: true },
+    { name: "Đổi định dạng", href: "/tools/doi-dinh-dang", icon: FileText, comingSoon: true },
+    { name: "Tạo phụ đề", href: "/tools/tao-phu-de", icon: FileText, comingSoon: true },
     { name: "Chuyển đổi tài liệu", href: "/tools/chuyen-doi-tai-lieu", icon: FileText },
   ];
 
@@ -57,9 +57,25 @@ export function Navigation() {
             </button>
 
             {isOpen && (
-              <div className="absolute left-0 mt-3.5 w-48 bg-zinc-950/95 border border-[#232332] rounded-2xl p-2 shadow-[0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-md overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="absolute left-0 mt-3.5 w-52 bg-zinc-950/95 border border-[#232332] rounded-2xl p-2 shadow-[0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-md overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                 {tools.map((tool) => {
                   const Icon = tool.icon;
+                  if (tool.comingSoon) {
+                    return (
+                      <div
+                        key={tool.name}
+                        className="flex items-center justify-between gap-2.5 px-3 py-2 text-xs text-zinc-650 cursor-not-allowed rounded-xl"
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Icon size={14} className="text-zinc-800" />
+                          <span className="font-medium">{tool.name}</span>
+                        </div>
+                        <span className="text-[8px] scale-90 px-1 py-0.5 rounded bg-zinc-900 border border-zinc-850 text-zinc-600 font-medium whitespace-nowrap">
+                          Đang phát triển
+                        </span>
+                      </div>
+                    );
+                  }
                   return (
                     <Link
                       key={tool.name}

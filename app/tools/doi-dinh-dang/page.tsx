@@ -6,11 +6,7 @@ import { Navigation } from "../../components/navigation";
 import { ToolCard } from "../../../components/tools/ToolCard";
 import { Footer } from "../../components/footer";
 
-// Disable Server-Side Rendering (SSR) for browser-only WASM/canvas dependencies
-const FormatConverter = dynamic(
-  () => import("../../../components/tools/FormatConverter").then((mod) => mod.FormatConverter),
-  { ssr: false }
-);
+import { FileText } from "@phosphor-icons/react";
 
 export default function FormatConverterPage() {
   return (
@@ -32,16 +28,24 @@ export default function FormatConverterPage() {
             Đổi <span className="text-[#ff5e3a]">Định Dạng</span> Tệp
           </h1>
           <p className="text-xs md:text-sm text-zinc-400 leading-relaxed max-w-md mx-auto">
-            Chuyển đổi hình ảnh HEIC/PNG/JPG/WebP hoặc tách nhạc MP3 từ video trực tiếp trong trình duyệt.
+            Chuyển đổi hình ảnh hoặc tách nhạc MP3 từ video trực tiếp trong trình duyệt.
           </p>
         </div>
 
         {/* Dynamic Tool Card */}
         <ToolCard
           title="Đổi định dạng tệp đa phương tiện"
-          description="Nạp hình ảnh hoặc video của bạn để chuyển đổi định dạng và chất lượng tệp tin mong muốn."
+          description="Tính năng đang được tối ưu hóa hiệu năng."
         >
-          <FormatConverter />
+          <div className="flex flex-col items-center justify-center text-center py-12 px-6 space-y-4">
+            <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-full text-zinc-500">
+              <FileText size={32} />
+            </div>
+            <h3 className="text-sm font-bold text-zinc-200">Công cụ đang phát triển</h3>
+            <p className="text-xs text-zinc-500 max-w-xs leading-relaxed">
+              Tính năng chuyển đổi định dạng tệp đa phương tiện đang được nâng cấp để tối ưu hóa khả năng tách âm thanh trên hạ tầng trình duyệt.
+            </p>
+          </div>
         </ToolCard>
 
       </div>

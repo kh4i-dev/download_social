@@ -6,11 +6,7 @@ import { Navigation } from "../../components/navigation";
 import { ToolCard } from "../../../components/tools/ToolCard";
 import { Footer } from "../../components/footer";
 
-// Disable Server-Side Rendering (SSR) for browser-only WASM dependencies
-const VideoTrimmer = dynamic(
-  () => import("../../../components/tools/VideoTrimmer").then((mod) => mod.VideoTrimmer),
-  { ssr: false }
-);
+import { Scissors } from "@phosphor-icons/react";
 
 export default function VideoTrimmerPage() {
   return (
@@ -32,16 +28,24 @@ export default function VideoTrimmerPage() {
             Cắt <span className="text-[#ff5e3a]">Video</span> Trực Tuyến
           </h1>
           <p className="text-xs md:text-sm text-zinc-400 leading-relaxed max-w-md mx-auto">
-            Biên tập và trích xuất đoạn phim tùy chỉnh trực tiếp trên trình duyệt bằng công nghệ WebAssembly.
+            Biên tập và trích xuất đoạn phim tùy chỉnh trực tiếp trên trình duyệt.
           </p>
         </div>
 
         {/* Dynamic Tool Card */}
         <ToolCard
           title="Cắt video của bạn"
-          description="Chọn video từ máy (tối đa 200MB), kéo thanh trượt để chọn đoạn phim cần cắt và bắt đầu trích xuất đoạn phim mong muốn."
+          description="Tính năng đang được tối ưu hóa hiệu năng."
         >
-          <VideoTrimmer />
+          <div className="flex flex-col items-center justify-center text-center py-12 px-6 space-y-4">
+            <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-full text-zinc-500">
+              <Scissors size={32} />
+            </div>
+            <h3 className="text-sm font-bold text-zinc-200">Công cụ đang phát triển</h3>
+            <p className="text-xs text-zinc-500 max-w-xs leading-relaxed">
+              Tính năng cắt video client-side bằng WebAssembly đang được kiểm nghiệm hiệu năng để tránh gây quá tải CPU của trình duyệt.
+            </p>
+          </div>
         </ToolCard>
 
       </div>
