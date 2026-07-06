@@ -2,18 +2,17 @@
 
 :root {
   --background: #0d0d12;
-  --foreground: #fafafa;
+  --foreground: #f4f4f6;
   
-  --orange-glow: rgba(255, 94, 58, 0.06);
-  --grid-color: rgba(99, 102, 241, 0.05); /* Soft electric indigo grid */
+  --orange-glow: rgba(255, 94, 58, 0.05);
+  --grid-color: rgba(129, 140, 248, 0.03); /* Soft electric lavender grid */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans), sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
-  --font-display: var(--font-outfit), var(--font-geist-sans), sans-serif;
+  --font-sans: var(--font-manrope), sans-serif;
+  --font-display: var(--font-outfit), var(--font-manrope), sans-serif;
 }
 
 body {
@@ -25,20 +24,20 @@ body {
 
 /* Premium Background Grid Pattern */
 .bg-grid-pattern {
-  background-size: 50px 50px;
+  background-size: 60px 60px;
   background-image: 
     linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
-  mask-image: radial-gradient(circle at 50% 50%, black 50%, transparent 100%);
+  mask-image: radial-gradient(circle at 50% 50%, black 45%, transparent 100%);
 }
 
-/* Asymmetric Glow Effects */
+/* Warm Coral Ambient Glow */
 .glow-orb-1 {
   position: absolute;
-  top: -15%;
-  left: 15%;
-  width: 700px;
-  height: 700px;
+  top: -10%;
+  left: 25%;
+  width: 600px;
+  height: 600px;
   background: radial-gradient(circle, var(--orange-glow) 0%, transparent 70%);
   filter: blur(100px);
   pointer-events: none;
@@ -47,11 +46,11 @@ body {
 
 .glow-orb-2 {
   position: absolute;
-  bottom: 5%;
-  right: 5%;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(129, 140, 248, 0.03) 0%, transparent 70%); /* Soft Electric Lavender */
+  bottom: 8%;
+  right: 15%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.02) 0%, transparent 70%);
   filter: blur(80px);
   pointer-events: none;
   z-index: 0;
@@ -59,62 +58,68 @@ body {
 
 /* Premium Card Glassmorphism - Warm Film Cell Slate */
 .glass-panel {
-  background: rgba(22, 22, 34, 0.7);
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(22, 22, 34, 0.65);
+  backdrop-filter: blur(24px) saturate(120%);
+  -webkit-backdrop-filter: blur(24px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.03);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 20px 60px rgba(0, 0, 0, 0.5);
+    inset 0 1px 0 rgba(255, 255, 255, 0.02),
+    0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
-/* Film Reel Sprockets Effect (Signature Element) */
-.film-strip-reel {
+/* Film Reel Sprockets Effect for Thumbnails only (Signature Element) */
+.sprocket-border {
   position: relative;
   background-color: #161622;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .film-sprockets-top, .film-sprockets-bottom {
-  height: 12px;
-  background-color: #0f0f16;
+  height: 10px;
+  background-color: #0d0d12;
   background-image: repeating-linear-gradient(
     to right,
     #1c1c2b,
-    #1c1c2b 12px,
-    #0f0f16 12px,
-    #0f0f16 28px
+    #1c1c2b 10px,
+    #0d0d12 10px,
+    #0d0d12 24px
   );
   width: 100%;
 }
 
 .film-sprockets-top {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
 }
 
 .film-sprockets-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
 }
 
-/* Custom transitions and states */
-.active-press:active {
-  transform: scale(0.98) translateY(1px);
-}
-
-/* Shimmer pulse loader animation */
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: -200% 0;
+/* Hover scales inside media query for reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  .hover-scale-effect {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
   }
-  100% {
-    background-position: 200% 0;
+  .hover-scale-effect:hover {
+    transform: scale(1.015);
+  }
+  .active-press:active {
+    transform: scale(0.985) translateY(1px);
+    transition: transform 0.1s ease;
+  }
+  .btn-hover-shine:hover {
+    opacity: 0.95;
   }
 }
 
-.shimmer-loader {
-  background: linear-gradient(90deg, rgba(22, 22, 34, 0.3) 25%, rgba(255, 94, 58, 0.05) 50%, rgba(22, 22, 34, 0.3) 75%);
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 2s infinite linear;
+/* Fallback transitions for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hover-scale-effect {
+    transition: border-color 0.2s ease;
+  }
+  .active-press:active {
+    transform: none;
+  }
 }
