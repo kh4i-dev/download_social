@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ParticleBackground } from "./components/particle-background";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,6 +29,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}
     >
       <body className="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col font-sans selection:bg-emerald-500/20 selection:text-emerald-400">
+        <ParticleBackground />
         {children}
       </body>
     </html>

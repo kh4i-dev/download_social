@@ -5,15 +5,30 @@ import { Footer } from "./components/footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <main className="overflow-x-hidden w-full max-w-full min-h-screen flex flex-col relative">
       {/* Background decorations */}
       <div className="absolute inset-0 bg-grid-pattern opacity-60 z-0 pointer-events-none" />
       <div className="glow-orb-1" />
       <div className="glow-orb-2" />
 
+      {/* Floating Glass Navigation */}
+      <header className="fixed top-6 inset-x-4 z-50 max-w-6xl mx-auto px-4 md:px-8">
+        <nav className="glass-panel backdrop-blur-lg bg-zinc-950/40 border border-zinc-900/60 rounded-full px-6 py-3 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-black tracking-widest text-zinc-100 uppercase">kh4idev.</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full text-[10px] font-semibold uppercase tracking-wider">
+              <span className="w-1 h-1 rounded-full bg-emerald-500 animate-ping" />
+              Node: Online
+            </span>
+          </div>
+        </nav>
+      </header>
+
       {/* Main content grid */}
-      <div className="flex-1 flex flex-col justify-between max-w-6xl mx-auto w-full px-4 md:px-8 py-12 md:py-20 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center my-auto">
+      <div className="flex-1 flex flex-col justify-between max-w-6xl mx-auto w-full px-4 md:px-8 pt-28 pb-12 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center my-auto w-full">
           {/* Left Column: Branding and Info */}
           <div className="lg:col-span-5 space-y-6 text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full text-xs font-semibold uppercase tracking-wider">
@@ -36,7 +51,7 @@ export default function Home() {
           </div>
 
           {/* Right Column: Interactive App */}
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-7 w-full">
             <div className="glass-panel rounded-2xl p-6 md:p-8 relative overflow-hidden group">
               {/* Inner glowing top-border */}
               <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
@@ -49,6 +64,6 @@ export default function Home() {
         {/* Footer */}
         <Footer />
       </div>
-    </div>
+    </main>
   );
 }
