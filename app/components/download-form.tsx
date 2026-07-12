@@ -12,6 +12,7 @@ export function DownloadForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
   const [imgSrc, setImgSrc] = useState<string | null>(null);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
   const getYoutubeVideoId = (urlStr: string): string | null => {
     if (!urlStr) return null;
@@ -101,6 +102,14 @@ export function DownloadForm() {
     }
   };
 
+  const handleReset = () => {
+    setUrl("");
+    setSuccess(false);
+    setDownloadUrl(null);
+    setError(null);
+    setProgress(0);
+  };
+
   const handleDownload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url.trim()) {
@@ -111,6 +120,7 @@ export function DownloadForm() {
     setIsLoading(true);
     setError(null);
     setSuccess(false);
+    setDownloadUrl(null);
 
     try {
       const response = await fetch("/api/download", {
@@ -131,7 +141,13 @@ export function DownloadForm() {
       setSuccess(true);
       
       if (result.data?.url) {
-        window.open(result.data.url, "_blank", "noopener,noreferrer");
+        setDownloadUrl(result.data.url);
+        // Attempt to open dynamically, fail silently if blocked by browser
+        try {
+          window.open(result.data.url, "_blank", "noopener,noreferrer");
+        } catch {
+          console.log("Automatic popup blocked, waiting for manual button click.");
+        }
       } else {
         throw new Error("Không thể trích xuất liên kết tải xuống.");
       }
@@ -170,15 +186,15 @@ export function DownloadForm() {
                   placeholder="YouTube, Facebook, TikTok, Instagram..."
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  disabled={isLoading}
-                  className="w-full bg-[#0d0d12]/80 border border-zinc-800/80 focus:outline-none focus:border-[#ff5e3a] focus:ring-1 focus:ring-[#ff5e3a]/30 text-zinc-100 rounded-xl px-4 py-3.5 pr-24 text-sm placeholder:text-zinc-600 outline-none transition-all duration-200"
+                  disabled={isLoading || success}
+                  className="w-full bg-[#0d0d12]/80 border border-zinc-800/80 focus:outline-none focus:border-[#ff5e3a] focus:ring-1 focus:ring-[#ff5e3a]/30 text-zinc-100 rounded-xl px-4 py-3.5 pr-24 text-sm placeholder:text-zinc-650 outline-none transition-all duration-200"
                   required
                 />
                 <button
                   type="button"
                   onClick={handlePaste}
-                  disabled={isLoading}
-                  className="absolute right-3 px-3 py-1.5 bg-zinc-850 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all outline-none focus:outline-none active-press"
+                  disabled={isLoading || success}
+                  className="absolute right-3 px-3 py-1.5 bg-zinc-850 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all outline-none focus:outline-none active-press disabled:opacity-50"
                   title="Dán từ khay nhớ tạm"
                 >
                   <ClipboardText size={14} />
@@ -197,8 +213,8 @@ export function DownloadForm() {
                   id="quality"
                   value={quality}
                   onChange={(e) => setQuality(e.target.value as any)}
-                  disabled={isLoading}
-                  className="w-full bg-[#0d0d12]/80 border border-zinc-800/80 focus:outline-none focus:border-[#ff5e3a] focus:ring-1 focus:ring-[#ff5e3a]/30 text-zinc-100 rounded-xl px-4 py-3.5 pr-10 text-sm outline-none transition-all duration-200 appearance-none cursor-pointer"
+                  disabled={isLoading || success}
+                  className="w-full bg-[#0d0d12]/80 border border-zinc-800/80 focus:outline-none focus:border-[#ff5e3a] focus:ring-1 focus:ring-[#ff5e3a]/30 text-zinc-100 rounded-xl px-4 py-3.5 pr-10 text-sm outline-none transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50"
                 >
                   <option value="mp3" className="bg-zinc-900 text-zinc-200">Chỉ lấy âm thanh MP3 (320kbps)</option>
                   <option value="720" className="bg-zinc-900 text-zinc-200">Video HD 720p</option>
@@ -216,38 +232,65 @@ export function DownloadForm() {
               </div>
             </div>
 
-            {/* Action Button - Exact Custom Gradient Stop-Colors #ff5e3a to #ff8a5c & Dark Text zinc-950 (AA Compliant) */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              style={{
-                background: isLoading
-                  ? undefined
-                  : "linear-gradient(to right, #ff5e3a, #ff8a5c)",
-              }}
-              className={`w-full py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2.5 transition-all duration-300 active-press outline-none cursor-pointer relative overflow-hidden group/btn ${
-                isLoading
-                  ? "bg-zinc-800 text-zinc-500 cursor-not-allowed border border-zinc-700/20"
-                  : "text-zinc-950 shadow-[0_4px_20px_rgba(255,94,58,0.15)] btn-hover-shine"
-              }`}
-            >
-              {/* Shine overlay */}
-              {!isLoading && (
-                <div className="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 translate-x-[-120%] group-hover/btn:translate-x-[120%] transition-transform duration-1000 ease-out pointer-events-none" />
-              )}
-
-              {isLoading ? (
-                <>
-                  <ArrowCounterClockwise className="animate-spin" size={18} />
-                  <span>Đang trích xuất liên kết...</span>
-                </>
-              ) : (
-                <>
+            {/* Action Button Area */}
+            {success && downloadUrl ? (
+              <div className="space-y-3 animate-in zoom-in-95 duration-200">
+                <a
+                  href={downloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  style={{
+                    background: "linear-gradient(to right, #ff5e3a, #ff8a5c)",
+                  }}
+                  className="w-full py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2.5 text-zinc-950 shadow-[0_4px_20px_rgba(255,94,58,0.15)] transition-all duration-300 active-press outline-none cursor-pointer text-center btn-hover-shine"
+                >
                   <DownloadSimple size={18} weight="bold" />
-                  <span>Bắt đầu tải xuống</span>
-                </>
-              )}
-            </button>
+                  <span>Tải xuống ngay</span>
+                </a>
+                
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="w-full py-2.5 px-4 rounded-xl border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 text-xs font-semibold transition-all active-press cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  <ArrowCounterClockwise size={14} />
+                  <span>Tải video khác</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                type="submit"
+                disabled={isLoading}
+                style={{
+                  background: isLoading
+                    ? undefined
+                    : "linear-gradient(to right, #ff5e3a, #ff8a5c)",
+                }}
+                className={`w-full py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2.5 transition-all duration-300 active-press outline-none cursor-pointer relative overflow-hidden group/btn ${
+                  isLoading
+                    ? "bg-zinc-800 text-zinc-500 cursor-not-allowed border border-zinc-700/20"
+                    : "text-zinc-950 shadow-[0_4px_20px_rgba(255,94,58,0.15)] btn-hover-shine"
+                }`}
+              >
+                {/* Shine overlay */}
+                {!isLoading && (
+                  <div className="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 translate-x-[-120%] group-hover/btn:translate-x-[120%] transition-transform duration-1000 ease-out pointer-events-none" />
+                )}
+
+                {isLoading ? (
+                  <>
+                    <ArrowCounterClockwise className="animate-spin" size={18} />
+                    <span>Đang trích xuất liên kết...</span>
+                  </>
+                ) : (
+                  <>
+                    <DownloadSimple size={18} weight="bold" />
+                    <span>Bắt đầu tải xuống</span>
+                  </>
+                )}
+              </button>
+            )}
           </form>
         </div>
 
